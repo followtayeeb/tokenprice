@@ -1,0 +1,195 @@
+{
+  "version": "1.0.0",
+  "updated": "2026-03-03T00:00:00Z",
+  "lastUpdatedBy": "Community",
+  "models": [
+    {
+      "id": "claude-opus-4-5-20251101",
+      "name": "Claude Opus 4.5",
+      "provider": "Anthropic",
+      "inputPrice": 15.00,
+      "outputPrice": 75.00,
+      "contextWindow": 200000,
+      "supportsBatch": true,
+      "description": "Most capable Anthropic model, excellent for complex reasoning",
+      "releaseDate": "2025-11-01"
+    },
+    {
+      "id": "claude-sonnet-4-5-20250514",
+      "name": "Claude Sonnet 4.5",
+      "provider": "Anthropic",
+      "inputPrice": 3.00,
+      "outputPrice": 15.00,
+      "contextWindow": 200000,
+      "supportsBatch": true,
+      "description": "Balanced capability and speed for most tasks",
+      "releaseDate": "2025-05-14"
+    },
+    {
+      "id": "claude-haiku-4-5-20250514",
+      "name": "Claude Haiku 4.5",
+      "provider": "Anthropic",
+      "inputPrice": 0.25,
+      "outputPrice": 1.25,
+      "contextWindow": 200000,
+      "supportsBatch": true,
+      "description": "Fastest and most compact Anthropic model",
+      "releaseDate": "2025-05-14"
+    },
+    {
+      "id": "gpt-4-turbo",
+      "name": "GPT-4.1",
+      "provider": "OpenAI",
+      "inputPrice": 2.00,
+      "outputPrice": 8.00,
+      "contextWindow": 128000,
+      "supportsBatch": true,
+      "description": "Advanced reasoning with 128K context",
+      "releaseDate": "2024-04-09"
+    },
+    {
+      "id": "gpt-4o",
+      "name": "GPT-4o",
+      "provider": "OpenAI",
+      "inputPrice": 2.50,
+      "outputPrice": 10.00,
+      "contextWindow": 128000,
+      "supportsBatch": true,
+      "description": "Multimodal reasoning, GPT-4 capabilities",
+      "releaseDate": "2024-05-13"
+    },
+    {
+      "id": "gpt-4o-mini",
+      "name": "GPT-4o-mini",
+      "provider": "OpenAI",
+      "inputPrice": 0.40,
+      "outputPrice": 1.60,
+      "contextWindow": 128000,
+      "supportsBatch": true,
+      "description": "Compact multimodal model, great for small tasks",
+      "releaseDate": "2024-07-18"
+    },
+    {
+      "id": "o3",
+      "name": "o3",
+      "provider": "OpenAI",
+      "inputPrice": 10.00,
+      "outputPrice": 40.00,
+      "contextWindow": 128000,
+      "supportsBatch": false,
+      "description": "Advanced reasoning with extended thinking",
+      "releaseDate": "2025-12-20"
+    },
+    {
+      "id": "o3-mini",
+      "name": "o3-mini",
+      "provider": "OpenAI",
+      "inputPrice": 1.10,
+      "outputPrice": 4.40,
+      "contextWindow": 128000,
+      "supportsBatch": false,
+      "description": "Compact reasoning model",
+      "releaseDate": "2025-12-20"
+    },
+    {
+      "id": "gemini-2-5-pro",
+      "name": "Gemini 2.5 Pro",
+      "provider": "Google",
+      "inputPrice": 1.25,
+      "outputPrice": 10.00,
+      "contextWindow": 1000000,
+      "supportsBatch": true,
+      "description": "Advanced multimodal reasoning with 1M context",
+      "releaseDate": "2025-12-19"
+    },
+    {
+      "id": "gemini-2-5-flash",
+      "name": "Gemini 2.5 Flash",
+      "provider": "Google",
+      "inputPrice": 0.075,
+      "outputPrice": 0.30,
+      "contextWindow": 1000000,
+      "supportsBatch": true,
+      "description": "Fast multimodal model with 1M context",
+      "releaseDate": "2025-04-02"
+    },
+    {
+      "id": "deepseek-v3",
+      "name": "DeepSeek-V3",
+      "provider": "DeepSeek",
+      "inputPrice": 0.27,
+      "outputPrice": 1.10,
+      "contextWindow": 64000,
+      "supportsBatch": true,
+      "description": "High-quality reasoning at competitive pricing",
+      "releaseDate": "2025-12-26"
+    },
+    {
+      "id": "deepseek-r1",
+      "name": "DeepSeek-R1",
+      "provider": "DeepSeek",
+      "inputPrice": 0.55,
+      "outputPrice": 2.19,
+      "contextWindow": 64000,
+      "supportsBatch": true,
+      "description": "Chain-of-thought reasoning model",
+      "releaseDate": "2025-01-20"
+    },
+    {
+      "id": "mistral-large-2411",
+      "name": "Mistral Large",
+      "provider": "Mistral",
+      "inputPrice": 2.00,
+      "outputPrice": 6.00,
+      "contextWindow": 32000,
+      "supportsBatch": true,
+      "description": "Flagship Mistral model for advanced tasks",
+      "releaseDate": "2024-11-21"
+    },
+    {
+      "id": "mistral-medium",
+      "name": "Mistral Medium",
+      "provider": "Mistral",
+      "inputPrice": 0.40,
+      "outputPrice": 2.00,
+      "contextWindow": 32000,
+      "supportsBatch": false,
+      "description": "Balance of capability and speed",
+      "releaseDate": "2024-02-16"
+    },
+    {
+      "id": "command-r-plus",
+      "name": "Command R+",
+      "provider": "Cohere",
+      "inputPrice": 2.50,
+      "outputPrice": 10.00,
+      "contextWindow": 128000,
+      "supportsBatch": true,
+      "description": "Advanced reasoning and retrieval optimized",
+      "releaseDate": "2024-08-29"
+    },
+    {
+      "id": "command-r",
+      "name": "Command R",
+      "provider": "Cohere",
+      "inputPrice": 0.15,
+      "outputPrice": 0.60,
+      "contextWindow": 128000,
+      "supportsBatch": true,
+      "description": "Production-ready model for retrieval and generation",
+      "releaseDate": "2024-03-15"
+    },
+    {
+      "id": "llama-3-3-70b",
+      "name": "Llama-3.3-70B",
+      "provider": "Groq",
+      "inputPrice": 0.59,
+      "outputPrice": 0.79,
+      "contextWindow": 8000,
+      "supportsBatch": false,
+      "description": "Open source model, free via Groq",
+      "releaseDate": "2025-01-24"
+    }
+  ],
+  "notes": "Prices in USD per million tokens. Updated weekly. Submit updates via GitHub issues/PRs."
+}
