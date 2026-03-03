@@ -17,18 +17,6 @@ export interface TableOptions {
 }
 
 /**
- * Format currency value
- *
- * @param {number} value - Value in dollars
- * @returns {string} Formatted currency string
- */
-function formatCurrency(value: number): string {
-  if (value === 0) return "$0.00000";
-  if (value < 0.00001) return `$${value.toExponential(2)}`;
-  return `$${value.toFixed(8).replace(/0+$/, "").replace(/\.$/, "")}`;
-}
-
-/**
  * Format a cost value with appropriate precision
  *
  * @param {number} value - Value in dollars
@@ -70,7 +58,7 @@ export function createComparisonTable(
       border: options.useColor ? ["cyan"] : ["grey"],
     },
     wordWrap: false,
-    colAligns: ["left", "right", "right", "right", ...(options.showBatch ? ["center"] : [])],
+    colAligns: (["left", "right", "right", "right", ...(options.showBatch ? ["center"] : [])] as Array<"left" | "right" | "center">),
   });
 
   // Find cheapest model for highlighting
@@ -102,7 +90,6 @@ export function createComparisonTable(
 
     const inputCost = formatCostValue(cost.input);
     const outputCost = formatCostValue(cost.output);
-    const totalCost = isCheapest && options.useColor ? chalk.green.bold(`$${totalCost}`) : `$${totalCost}`;
 
     const row = [
       modelName,

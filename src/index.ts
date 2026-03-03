@@ -16,11 +16,7 @@ import {
   sortModelsByCost,
   calculateCost,
 } from "./pricing.js";
-import {
-  countTokensImproved,
-  estimateOutputTokens,
-  formatTokens,
-} from "./tokenizer.js";
+import { countTokensImproved, estimateOutputTokens } from "./tokenizer.js";
 import {
   createComparisonTable,
   formatSingleModelCost,
@@ -226,8 +222,9 @@ async function main(): Promise<void> {
 
           // Find and show cheapest
           const costs = models.map((m) => calculateCost(m, inputTokens, outputTokens));
-          const cheapestIdx = costs.reduce((minIdx, cost, idx) =>
-            cost.total < costs[minIdx].total ? idx : minIdx
+          const cheapestIdx = costs.reduce(
+            (minIdx, cost, idx) => (cost.total < costs[minIdx].total ? idx : minIdx),
+            0
           );
 
           console.log(

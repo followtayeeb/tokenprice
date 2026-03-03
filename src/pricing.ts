@@ -65,8 +65,8 @@ function getDefaultPricingData(): PricingDatabase {
         id: "claude-opus-4-5-20251101",
         name: "Claude Opus 4.5",
         provider: "Anthropic",
-        inputPrice: 15.0,
-        outputPrice: 75.0,
+        inputPrice: 5.0,
+        outputPrice: 25.0,
         contextWindow: 200000,
         supportsBatch: true,
         description: "Most capable Anthropic model",
@@ -87,8 +87,8 @@ function getDefaultPricingData(): PricingDatabase {
         id: "claude-haiku-4-5-20250514",
         name: "Claude Haiku 4.5",
         provider: "Anthropic",
-        inputPrice: 0.25,
-        outputPrice: 1.25,
+        inputPrice: 1.0,
+        outputPrice: 5.0,
         contextWindow: 200000,
         supportsBatch: true,
         description: "Fastest Anthropic model",
@@ -164,8 +164,8 @@ function getDefaultPricingData(): PricingDatabase {
         id: "gemini-2-5-flash",
         name: "Gemini 2.5 Flash",
         provider: "Google",
-        inputPrice: 0.075,
-        outputPrice: 0.3,
+        inputPrice: 0.30,
+        outputPrice: 2.5,
         contextWindow: 1000000,
         supportsBatch: true,
         description: "Fast multimodal",
@@ -175,8 +175,8 @@ function getDefaultPricingData(): PricingDatabase {
         id: "deepseek-v3",
         name: "DeepSeek-V3",
         provider: "DeepSeek",
-        inputPrice: 0.27,
-        outputPrice: 1.1,
+        inputPrice: 0.14,
+        outputPrice: 0.28,
         contextWindow: 64000,
         supportsBatch: true,
         description: "High-quality reasoning",
@@ -272,6 +272,12 @@ export function findModel(
   // Exact name match
   const nameMatch = database.models.find((m) => m.name.toLowerCase() === lowerQuery);
   if (nameMatch) return nameMatch;
+
+  // Partial ID match (e.g., "claude-opus-4-5" matches "claude-opus-4-5-20251101")
+  const partialIdMatch = database.models.find((m) =>
+    m.id.toLowerCase().includes(lowerQuery)
+  );
+  if (partialIdMatch) return partialIdMatch;
 
   // Partial name match (case-insensitive)
   const partialMatch = database.models.find((m) =>
