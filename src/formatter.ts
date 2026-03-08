@@ -23,10 +23,13 @@ export interface TableOptions {
  * @returns {string} Formatted string
  */
 function formatCostValue(value: number): string {
-  if (value < 0.0001) {
-    return value.toExponential(1);
+  if (value >= 0.01) {
+    return value.toFixed(4);
   }
-  return value.toFixed(5).replace(/0+$/, "").replace(/\.$/, "");
+  if (value >= 0.0001) {
+    return value.toFixed(6);
+  }
+  return value.toFixed(8);
 }
 
 /**
@@ -52,7 +55,7 @@ export function createComparisonTable(
       options.useColor ? chalk.bold.cyan("Total") : "Total",
       ...(options.showBatch ? [options.useColor ? chalk.bold.cyan("Batch") : "Batch"] : []),
     ],
-    colWidths: [28, 12, 12, 12, ...(options.showBatch ? [6] : [])],
+    colWidths: [28, 14, 14, 14, ...(options.showBatch ? [6] : [])],
     style: {
       head: [],
       border: options.useColor ? ["cyan"] : ["grey"],
