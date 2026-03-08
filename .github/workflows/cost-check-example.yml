@@ -1,0 +1,50 @@
+name: LLM Cost Check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  cost-check-inline:
+    name: Cost check (inline prompt)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check cost for sample prompt
+        id: cost
+        uses: ./.github/actions/tokenprice
+        with:
+          prompt: "Explain the theory of relativity in simple terms"
+          model: gpt-4o
+          max-cost: "0.10"
+
+      - name: Print result
+        run: |
+          echo "Status: ${{ steps.cost.outputs.status }}"
+          echo "Estimated cost: ${{ steps.cost.outputs.estimated-cost }}"
+
+  cost-check-file:
+    name: Cost check (prompt file)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create sample prompt file
+        run: |
+          echo "Write a comprehensive guide to Kubernetes deployment strategies including blue-green, canary, and rolling updates." > /tmp/prompt.txt
+
+      - name: Check cost for prompt file
+        id: cost
+        uses: ./.github/actions/tokenprice
+        with:
+          prompt-file: /tmp/prompt.txt
+          model: claude-sonnet-4-5
+          max-cost: "0.50"
+
+      - name: Print result
+        run: |
+          echo "Status: ${{ steps.cost.outputs.status }}"
+          echo "Estimated cost: ${{ steps.cost.outputs.estimated-cost }}"

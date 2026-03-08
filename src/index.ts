@@ -15,6 +15,7 @@ import {
   findModel,
   sortModelsByCost,
   calculateCost,
+  fetchLatestPricing,
 } from "./pricing.js";
 import { countTokensImproved, estimateOutputTokens } from "./tokenizer.js";
 import {
@@ -27,6 +28,15 @@ import {
   formatError,
   formatWarning,
 } from "./formatter.js";
+import { runBatch } from "./batch.js";
+import { runBudget } from "./budget.js";
+import { runGuard } from "./guard.js";
+import { runWatch } from "./watch.js";
+import { runMCPServer } from "./mcp.js";
+import { runInteractive } from "./interactive.js";
+import { runBreakdown } from "./breakdown.js";
+import { runChangelog } from "./changelog.js";
+import { checkForUpdates } from "./updater.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -53,7 +63,7 @@ async function main(): Promise<void> {
   const program = new Command();
 
   // Load pricing data
-  const pricingData = loadPricingData();
+  let pricingData = loadPricingData();
 
   // Read package.json for version
   let version = "0.1.0";
@@ -103,8 +113,44 @@ async function main(): Promise<void> {
       "--no-color",
       "Disable colored output (respects NO_COLOR env var)"
     )
+    .option(
+      "--update-pricing",
+      "Fetch latest pricing data from GitHub before running"
+    )
+    .option("--mcp", "Run as MCP server (Model Context Protocol)")
+    .option("-i, --interactive", "Run in interactive mode")
+    .option(
+      "--no-update",
+      "Skip automatic pricing staleness check (recommended for CI)"
+    )
     .action(async (prompts, options) => {
       try {
+        // MCP server mode
+        if (options.mcp) {
+          await runMCPServer();
+          return;
+        }
+
+        // Interactive mode
+        if (options.interactive) {
+          await runInteractive();
+          return;
+        }
+
+        // Update pricing data if explicitly requested
+        if (options.updatePricing) {
+          await fetchLatestPricing(useColor);
+          pricingData = loadPricingData();
+        }
+
+        // Start staleness check in background (non-blocking)
+        // options.update is true by default; false when --no-update is passed
+        const updateCheckPromise = checkForUpdates(
+          pricingData,
+          options.update === false,
+          useColor && !options.noColor
+        );
+
         let prompt = "";
 
         // Get prompt from various sources
@@ -243,6 +289,10 @@ async function main(): Promise<void> {
             console.log("✓ = Batch API support");
           }
           console.log("");
+
+          // Print update notification beneath the table if prices changed
+          const updateMsg = await updateCheckPromise;
+          if (updateMsg) console.log(updateMsg + "\n");
         }
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
@@ -354,6 +404,122 @@ async function main(): Promise<void> {
         console.error(formatError(message, useColor));
         process.exit(1);
       }
+    });
+
+  /**
+   * Batch processing command
+   */
+  program
+    .command("batch <file>")
+    .description("Process multiple prompts from a JSONL or CSV file")
+    .option("-m, --model <model>", "Model to use (default: compare all)")
+    .option("-c, --compare", "Compare all models for each prompt")
+    .option("-o, --output <format>", "Output format (text, json, csv)", "text")
+    .action(async (file: string, options: { model?: string; compare?: boolean; output?: string }) => {
+      await runBatch({
+        filePath: file,
+        modelId: options.model,
+        compare: options.compare,
+        outputFormat: (options.output as "text" | "json" | "csv") ?? "text",
+        useColor,
+      });
+    });
+
+  /**
+   * Budget projection command
+   */
+  program
+    .command("budget")
+    .description("Project monthly costs based on usage patterns")
+    .option("-m, --model <model>", "Model to project (default: compare all)")
+    .option("-c, --compare", "Compare all models")
+    .option("--requests-per-day <n>", "Number of API requests per day", "100")
+    .option("--avg-tokens <n>", "Average input tokens per request", "1000")
+    .option("--avg-output-tokens <n>", "Average output tokens (default: estimated)")
+    .option("-o, --output <format>", "Output format (text, json, csv)", "text")
+    .action(async (options: { model?: string; compare?: boolean; requestsPerDay: string; avgTokens: string; avgOutputTokens?: string; output: string }) => {
+      await runBudget({
+        modelId: options.model,
+        compare: options.compare,
+        requestsPerDay: parseInt(options.requestsPerDay),
+        avgInputTokens: parseInt(options.avgTokens),
+        avgOutputTokens: options.avgOutputTokens ? parseInt(options.avgOutputTokens) : undefined,
+        outputFormat: options.output as "text" | "json" | "csv",
+        useColor,
+      });
+    });
+
+  /**
+   * CI/CD budget guard command
+   */
+  program
+    .command("guard [prompt]")
+    .description("CI/CD budget guard — fails if estimated cost exceeds threshold")
+    .option("-m, --model <model>", "Model to check against (required)")
+    .option("--max-cost <amount>", "Maximum allowed cost in USD", "0.10")
+    .option("-f, --file <path>", "Read prompt from file")
+    .option("-o, --output <format>", "Output format (text, json)", "text")
+    .action(async (prompt: string | undefined, options: { model?: string; maxCost: string; file?: string; output: string }) => {
+      if (!options.model) {
+        console.error(formatError("--model is required for guard command", useColor));
+        process.exit(1);
+      }
+      await runGuard({
+        prompt,
+        promptPath: options.file,
+        modelId: options.model,
+        maxCost: parseFloat(options.maxCost),
+        outputFormat: options.output as "text" | "json",
+        useColor,
+      });
+    });
+
+  /**
+   * Provider cost breakdown command
+   */
+  program
+    .command("breakdown")
+    .description("Show cost breakdown grouped by provider")
+    .argument("[prompt...]", "Prompt text to estimate costs for")
+    .option("--input-tokens <n>", "Input token count")
+    .option("--output-tokens <n>", "Output token count override")
+    .option("-o, --output <format>", "Output format (text, json, csv)", "text")
+    .action(async (prompts: string[], options: { inputTokens?: string; outputTokens?: string; output: string }) => {
+      await runBreakdown({
+        prompt: prompts?.length > 0 ? prompts.join(" ") : undefined,
+        inputTokens: options.inputTokens ? parseInt(options.inputTokens) : undefined,
+        outputTokens: options.outputTokens ? parseInt(options.outputTokens) : undefined,
+        outputFormat: options.output as "text" | "json" | "csv",
+        useColor,
+      });
+    });
+
+  /**
+   * Log file watcher command
+   */
+  program
+    .command("watch")
+    .description("Watch an API usage log file and track real-time costs")
+    .requiredOption("-l, --log <path>", "Path to the log file to watch")
+    .action(async (options: { log: string }) => {
+      await runWatch({
+        logPath: options.log,
+        useColor,
+      });
+    });
+
+  /**
+   * Changelog command — pricing history viewer
+   */
+  program
+    .command("changelog")
+    .description("Show pricing change history")
+    .option("--since <duration>", "Filter to last N days, e.g. --since 30d")
+    .action(async (options: { since?: string }) => {
+      await runChangelog({
+        since: options.since,
+        useColor,
+      });
     });
 
   /**

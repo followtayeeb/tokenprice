@@ -1,0 +1,132 @@
+name: "tokenprice Cost Check"
+description: "Estimate LLM API costs and fail if they exceed a budget threshold"
+branding:
+  icon: "dollar-sign"
+  color: "green"
+
+inputs:
+  prompt:
+    description: "Inline prompt text to estimate"
+    required: false
+  prompt-file:
+    description: "Path to a file containing the prompt"
+    required: false
+  model:
+    description: "Model ID to check against (e.g. gpt-4o, claude-sonnet-4-5)"
+    required: true
+  max-cost:
+    description: "Maximum allowed cost in USD"
+    required: false
+    default: "0.10"
+  output-format:
+    description: "Output format: text or json (json is used internally)"
+    required: false
+    default: "text"
+
+outputs:
+  status:
+    description: "Result status: pass or fail"
+    value: ${{ steps.guard.outputs.status }}
+  estimated-cost:
+    description: "Estimated cost in USD"
+    value: ${{ steps.guard.outputs.estimated-cost }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: "20"
+
+    - name: Run tokenprice guard
+      id: guard
+      shell: bash
+      env:
+        NO_COLOR: "1"
+        TP_PROMPT: ${{ inputs.prompt }}
+        TP_PROMPT_FILE: ${{ inputs.prompt-file }}
+        TP_MODEL: ${{ inputs.model }}
+        TP_MAX_COST: ${{ inputs.max-cost }}
+      run: |
+        set +e
+
+        # Build the npx command
+        ARGS=("guard")
+
+        if [ -n "$TP_PROMPT_FILE" ]; then
+          ARGS+=("--file" "$TP_PROMPT_FILE")
+        elif [ -n "$TP_PROMPT" ]; then
+          ARGS+=("$TP_PROMPT")
+        else
+          echo "::error::Either 'prompt' or 'prompt-file' input is required"
+          exit 1
+        fi
+
+        ARGS+=("--model" "$TP_MODEL")
+        ARGS+=("--max-cost" "$TP_MAX_COST")
+        ARGS+=("--output" "json")
+
+        # Run tokenprice guard and capture output
+        OUTPUT=$(npx tokenprice@latest "${ARGS[@]}" 2>&1)
+        EXIT_CODE=$?
+
+        echo "Raw output:"
+        echo "$OUTPUT"
+
+        # Parse JSON output
+        if command -v jq &> /dev/null; then
+          STATUS=$(echo "$OUTPUT" | jq -r '.status // empty' 2>/dev/null)
+          COST=$(echo "$OUTPUT" | jq -r '.estimatedCost // empty' 2>/dev/null)
+          MODEL_NAME=$(echo "$OUTPUT" | jq -r '.model // empty' 2>/dev/null)
+          MAX_COST_VAL=$(echo "$OUTPUT" | jq -r '.maxCost // empty' 2>/dev/null)
+          OVER_BUDGET=$(echo "$OUTPUT" | jq -r '.overBudgetBy // empty' 2>/dev/null)
+        else
+          # Fallback: parse JSON with grep/sed if jq is unavailable
+          STATUS=$(echo "$OUTPUT" | grep -o '"status":\s*"[^"]*"' | head -1 | sed 's/.*"\([^"]*\)"$/\1/')
+          COST=$(echo "$OUTPUT" | grep -o '"estimatedCost":\s*[0-9.e-]*' | head -1 | sed 's/.*:\s*//')
+          MODEL_NAME=$(echo "$OUTPUT" | grep -o '"model":\s*"[^"]*"' | head -1 | sed 's/.*"\([^"]*\)"$/\1/')
+          MAX_COST_VAL=$(echo "$OUTPUT" | grep -o '"maxCost":\s*[0-9.]*' | head -1 | sed 's/.*:\s*//')
+          OVER_BUDGET=$(echo "$OUTPUT" | grep -o '"overBudgetBy":\s*[0-9.e-]*' | head -1 | sed 's/.*:\s*//')
+        fi
+
+        # Default values if parsing failed
+        if [ -z "$STATUS" ]; then
+          if [ $EXIT_CODE -eq 0 ]; then
+            STATUS="pass"
+          else
+            STATUS="fail"
+          fi
+        fi
+
+        COST="${COST:-unknown}"
+
+        # Write outputs
+        echo "status=$STATUS" >> "$GITHUB_OUTPUT"
+        echo "estimated-cost=$COST" >> "$GITHUB_OUTPUT"
+
+        # Write job summary
+        if [ "$STATUS" = "pass" ]; then
+          ICON="white_check_mark"
+          VERDICT="PASS"
+        else
+          ICON="x"
+          VERDICT="FAIL"
+        fi
+
+        {
+          echo "## :${ICON}: tokenprice Cost Check: ${VERDICT}"
+          echo ""
+          echo "| Field | Value |"
+          echo "|-------|-------|"
+          echo "| **Model** | ${MODEL_NAME:-$TP_MODEL} |"
+          echo "| **Estimated Cost** | \$${COST} |"
+          echo "| **Max Allowed** | \$${MAX_COST_VAL:-$TP_MAX_COST} |"
+          if [ -n "$OVER_BUDGET" ] && [ "$OVER_BUDGET" != "null" ]; then
+            echo "| **Over Budget By** | \$${OVER_BUDGET} |"
+          fi
+          echo ""
+        } >> "$GITHUB_STEP_SUMMARY"
+
+        # Exit with the original exit code
+        exit $EXIT_CODE

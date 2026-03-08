@@ -4,8 +4,10 @@
  */
 
 import { readFileSync } from "fs";
+import { writeFile } from "fs/promises";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
+import chalk from "chalk";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -32,6 +34,7 @@ export interface PricingDatabase {
   version: string;
   updated: string;
   models: ModelPricing[];
+  sources?: Record<string, string>;
 }
 
 /**
@@ -361,4 +364,65 @@ export function calculateCost(
     output,
     total: input + output,
   };
+}
+
+/**
+ * Fetch latest pricing data from GitHub and write to data/pricing.json
+ *
+ * @param {boolean} useColor - Whether to use colored output
+ */
+export async function fetchLatestPricing(useColor: boolean): Promise<void> {
+  const url =
+    "https://raw.githubusercontent.com/followtayeeb/tokenprice/main/data/pricing.json";
+  const dataPath = join(__dirname, "..", "data", "pricing.json");
+
+  const green = useColor ? chalk.green : (s: string) => s;
+  const yellow = useColor ? chalk.yellow : (s: string) => s;
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      console.warn(
+        yellow("\u26a0") +
+          ` Could not fetch latest pricing: HTTP ${response.status}. Using cached data.`
+      );
+      return;
+    }
+
+    const text = await response.text();
+    let parsed: unknown;
+    try {
+      parsed = JSON.parse(text);
+    } catch {
+      console.warn(
+        yellow("\u26a0") +
+          " Could not fetch latest pricing: invalid JSON response. Using cached data."
+      );
+      return;
+    }
+
+    const data = parsed as Record<string, unknown>;
+    if (!Array.isArray(data.models)) {
+      console.warn(
+        yellow("\u26a0") +
+          " Could not fetch latest pricing: missing models array. Using cached data."
+      );
+      return;
+    }
+
+    await writeFile(dataPath, JSON.stringify(data, null, 2), "utf-8");
+
+    const modelCount = (data.models as unknown[]).length;
+    const updated = typeof data.updated === "string" ? data.updated : "unknown";
+    console.log(
+      green("\u2713") +
+        ` Pricing updated: ${modelCount} models loaded (as of ${updated})`
+    );
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.warn(
+      yellow("\u26a0") +
+        ` Could not fetch latest pricing: ${message}. Using cached data.`
+    );
+  }
 }

@@ -191,5 +191,14 @@
       "releaseDate": "2025-01-24"
     }
   ],
-  "notes": "Prices in USD per million tokens. Updated weekly. Submit updates via GitHub issues/PRs."
+  "notes": "Prices in USD per million tokens. Updated weekly. Submit updates via GitHub issues/PRs.",
+  "sources": {
+    "Anthropic": "https://www.anthropic.com/pricing",
+    "OpenAI": "https://openai.com/api/pricing/",
+    "Google": "https://ai.google.dev/gemini-api/docs/pricing",
+    "DeepSeek": "https://api-docs.deepseek.com/quick_start/pricing",
+    "Mistral": "https://mistral.ai/technology/#models",
+    "Cohere": "https://cohere.com/pricing",
+    "Groq": "https://console.groq.com/docs/openai"
+  }
 }

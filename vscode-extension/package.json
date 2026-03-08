@@ -1,0 +1,86 @@
+{
+  "name": "tokenprice-vscode",
+  "displayName": "tokenprice — LLM Cost Estimator",
+  "description": "Estimate and compare LLM API costs directly in VS Code. Select text, see token counts and pricing instantly.",
+  "version": "0.1.0",
+  "publisher": "followtayeeb",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/followtayeeb/tokenprice"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "llm",
+    "tokens",
+    "pricing",
+    "cost",
+    "openai",
+    "anthropic",
+    "claude",
+    "gpt"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "tokenprice.estimateCost",
+        "title": "tokenprice: Estimate Cost"
+      },
+      {
+        "command": "tokenprice.compareModels",
+        "title": "tokenprice: Compare Models"
+      },
+      {
+        "command": "tokenprice.setModel",
+        "title": "tokenprice: Set Default Model"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "tokenprice.estimateCost",
+        "key": "ctrl+shift+t",
+        "mac": "cmd+shift+t",
+        "when": "editorTextFocus"
+      }
+    ],
+    "configuration": {
+      "title": "tokenprice",
+      "properties": {
+        "tokenprice.defaultModel": {
+          "type": "string",
+          "default": "claude-sonnet-4-5-20250514",
+          "description": "Default model ID for cost estimation"
+        },
+        "tokenprice.showStatusBar": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show token count and cost in the status bar when text is selected"
+        },
+        "tokenprice.autoEstimate": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically estimate cost when text is selected"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.3.0",
+    "@vscode/vsce": "^2.22.0"
+  }
+}
