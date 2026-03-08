@@ -1,6 +1,6 @@
 {
   "name": "llm-costs",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Know before you send. Compare LLM costs in your terminal.",
   "type": "module",
   "main": "dist/index.js",
