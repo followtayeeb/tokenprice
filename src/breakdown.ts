@@ -178,7 +178,7 @@ function renderCSV(result: BreakdownResult): string {
  *
  * @param {BreakdownOptions} options - Breakdown options
  */
-export async function runBreakdown(options: BreakdownOptions): Promise<void> {
+export function runBreakdown(options: BreakdownOptions): void {
   let inputTokens = options.inputTokens ?? 1000;
   let outputTokens = options.outputTokens ?? 500;
 

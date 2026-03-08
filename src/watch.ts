@@ -3,7 +3,7 @@
  * Watches API usage log files and tracks real-time LLM costs
  */
 
-import { existsSync, statSync, watchFile, unwatchFile, StatWatcher } from "fs";
+import { existsSync, statSync, watchFile, unwatchFile } from "fs";
 import { createInterface } from "readline";
 import { createReadStream } from "fs";
 import chalk from "chalk";
@@ -258,10 +258,9 @@ export async function runWatch(options: WatchOptions): Promise<void> {
 
   // Track file position for tailing
   let fileSize = statSync(logPath).size;
-  let watcher: StatWatcher | undefined;
 
-  // Watch for new lines
-  watcher = watchFile(logPath, { interval: 500 }, (curr) => {
+  // Watch for new lines (unwatchFile by path in cleanup, no need to store StatWatcher)
+  watchFile(logPath, { interval: 500 }, (curr) => {
     const newSize = curr.size;
     if (newSize <= fileSize) {
       fileSize = newSize;
@@ -292,9 +291,7 @@ export async function runWatch(options: WatchOptions): Promise<void> {
 
   // Handle Ctrl+C
   const cleanup = (): void => {
-    if (watcher) {
-      unwatchFile(logPath);
-    }
+    unwatchFile(logPath);
     console.log("");
     const finalMsg = "Final Summary:";
     console.log(useColor ? chalk.bold.cyan(finalMsg) : finalMsg);

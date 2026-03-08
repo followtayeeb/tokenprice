@@ -263,7 +263,7 @@ function renderCsvOutput(projections: ModelProjection[]): void {
  *
  * @param {BudgetOptions} options - Budget options
  */
-export async function runBudget(options: BudgetOptions): Promise<void> {
+export function runBudget(options: BudgetOptions): void {
   const db = loadPricingData();
   const avgOutputTokens =
     options.avgOutputTokens ?? estimateOutputTokens(options.avgInputTokens);

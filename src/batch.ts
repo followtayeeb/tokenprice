@@ -103,7 +103,7 @@ function parseJsonlLine(line: string, lineNumber: number): PromptEntry | null {
       return null;
     }
     const id = typeof obj["id"] === "string" ? obj["id"] : `prompt-${lineNumber}`;
-    return { id, prompt: obj["prompt"] as string };
+    return { id, prompt: obj["prompt"] };
   } catch {
     process.stderr.write(`Warning: Line ${lineNumber}: invalid JSON, skipping\n`);
     return null;

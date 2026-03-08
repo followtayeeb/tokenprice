@@ -41,6 +41,32 @@ import { checkForUpdates } from "./updater.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+/** Typed options for the main estimate command */
+interface MainOptions {
+  model?: string;
+  compare?: boolean;
+  file?: string;
+  showTokens?: boolean;
+  output: string;
+  noColor?: boolean;
+  updatePricing?: boolean;
+  mcp?: boolean;
+  interactive?: boolean;
+  update: boolean;
+}
+
+/** Typed options for the count command */
+interface CountOptions {
+  model?: string;
+  output: string;
+}
+
+/** Typed options for the list command */
+interface ListOptions {
+  provider?: string;
+  output: string;
+}
+
 /**
  * Determine if color output should be used
  */
@@ -58,7 +84,7 @@ function shouldUseColor(): boolean {
 /**
  * Main CLI application
  */
-async function main(): Promise<void> {
+function main(): void {
   const useColor = shouldUseColor();
   const program = new Command();
 
@@ -69,7 +95,7 @@ async function main(): Promise<void> {
   let version = "0.1.0";
   try {
     const pkgPath = `${__dirname}/../package.json`;
-    const pkgData = JSON.parse(readFileSync(pkgPath, "utf-8"));
+    const pkgData = JSON.parse(readFileSync(pkgPath, "utf-8")) as { version: string };
     version = pkgData.version;
   } catch {
     // Use default version
@@ -123,7 +149,7 @@ async function main(): Promise<void> {
       "--no-update",
       "Skip automatic pricing staleness check (recommended for CI)"
     )
-    .action(async (prompts, options) => {
+    .action(async (prompts: string[], options: MainOptions) => {
       try {
         // MCP server mode
         if (options.mcp) {
@@ -309,7 +335,7 @@ async function main(): Promise<void> {
     .description("Count tokens in text")
     .option("-m, --model <model>", "Model for tokenization (optional)")
     .option("-o, --output <format>", "Output format (text, json)", "text")
-    .action((textParts, options) => {
+    .action((textParts: string[], options: CountOptions) => {
       try {
         const text = textParts.join(" ");
         const result = countTokensImproved(text);
@@ -352,15 +378,14 @@ async function main(): Promise<void> {
       "Filter by provider"
     )
     .option("-o, --output <format>", "Output format (text, json)", "text")
-    .action((options) => {
+    .action((options: ListOptions) => {
       try {
         let models = pricingData.models;
 
         if (options.provider) {
+          const providerFilter = options.provider;
           models = models.filter(
-            (m) =>
-              m.provider.toLowerCase() ===
-              options.provider.toLowerCase()
+            (m) => m.provider.toLowerCase() === providerFilter.toLowerCase()
           );
         }
 
@@ -437,8 +462,8 @@ async function main(): Promise<void> {
     .option("--avg-tokens <n>", "Average input tokens per request", "1000")
     .option("--avg-output-tokens <n>", "Average output tokens (default: estimated)")
     .option("-o, --output <format>", "Output format (text, json, csv)", "text")
-    .action(async (options: { model?: string; compare?: boolean; requestsPerDay: string; avgTokens: string; avgOutputTokens?: string; output: string }) => {
-      await runBudget({
+    .action((options: { model?: string; compare?: boolean; requestsPerDay: string; avgTokens: string; avgOutputTokens?: string; output: string }) => {
+      runBudget({
         modelId: options.model,
         compare: options.compare,
         requestsPerDay: parseInt(options.requestsPerDay),
@@ -484,8 +509,8 @@ async function main(): Promise<void> {
     .option("--input-tokens <n>", "Input token count")
     .option("--output-tokens <n>", "Output token count override")
     .option("-o, --output <format>", "Output format (text, json, csv)", "text")
-    .action(async (prompts: string[], options: { inputTokens?: string; outputTokens?: string; output: string }) => {
-      await runBreakdown({
+    .action((prompts: string[], options: { inputTokens?: string; outputTokens?: string; output: string }) => {
+      runBreakdown({
         prompt: prompts?.length > 0 ? prompts.join(" ") : undefined,
         inputTokens: options.inputTokens ? parseInt(options.inputTokens) : undefined,
         outputTokens: options.outputTokens ? parseInt(options.outputTokens) : undefined,
@@ -545,9 +570,10 @@ async function readStdin(): Promise<string> {
 
     process.stdin.setEncoding("utf8");
     process.stdin.on("readable", () => {
-      let chunk;
-      while ((chunk = process.stdin.read()) !== null) {
+      let chunk = process.stdin.read() as string | null;
+      while (chunk !== null) {
         data += chunk;
+        chunk = process.stdin.read() as string | null;
       }
     });
 
@@ -560,7 +586,9 @@ async function readStdin(): Promise<string> {
 }
 
 // Run main
-main().catch((error) => {
+try {
+  main();
+} catch (error) {
   console.error(
     formatError(
       error instanceof Error ? error.message : String(error),
@@ -568,4 +596,4 @@ main().catch((error) => {
     )
   );
   process.exit(1);
-});
+}
