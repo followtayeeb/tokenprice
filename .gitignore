@@ -37,3 +37,9 @@ coverage/
 tmp/
 temp/
 *.tmp
+
+# Local only — not for repo
+.claude/
+vscode-extension/
+PROJECT_SUMMARY.md
+PRD.md
