@@ -14,7 +14,7 @@ import { tmpdir } from "os";
 const TMP = tmpdir();
 
 async function writeTmp(name: string, content: string): Promise<string> {
-  const p = join(TMP, `tokenprice-test-${name}`);
+  const p = join(TMP, `llm-costs-test-${name}`);
   await writeFile(p, content, "utf-8");
   return p;
 }

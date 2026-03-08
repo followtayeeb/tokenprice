@@ -54,12 +54,12 @@ function findModel(modelId: string): ModelPricing {
 
 export function activate(context: vscode.ExtensionContext): void {
   const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
-  statusBarItem.command = 'tokenprice.estimateCost';
+  statusBarItem.command = 'llm-costs.estimateCost';
   context.subscriptions.push(statusBarItem);
 
   context.subscriptions.push(
     vscode.window.onDidChangeTextEditorSelection((e) => {
-      const config = vscode.workspace.getConfiguration('tokenprice');
+      const config = vscode.workspace.getConfiguration('llm-costs');
       if (!config.get('showStatusBar') || !config.get('autoEstimate')) {
         statusBarItem.hide();
         return;
@@ -76,39 +76,39 @@ export function activate(context: vscode.ExtensionContext): void {
       const outputTokens = estimateOutputTokens(inputTokens);
       const cost = estimateCost(inputTokens, outputTokens, model);
       statusBarItem.text = `$(symbol-ruler) ~${inputTokens} tokens | $${cost.toFixed(4)}`;
-      statusBarItem.tooltip = `tokenprice: ~${inputTokens} input tokens, ~${outputTokens} output tokens estimated\nModel: ${model.name}\nEstimated cost: $${cost.toFixed(6)}`;
+      statusBarItem.tooltip = `llm-costs: ~${inputTokens} input tokens, ~${outputTokens} output tokens estimated\nModel: ${model.name}\nEstimated cost: $${cost.toFixed(6)}`;
       statusBarItem.show();
     })
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('tokenprice.estimateCost', () => {
+    vscode.commands.registerCommand('llm-costs.estimateCost', () => {
       const editor = vscode.window.activeTextEditor;
       if (!editor) return;
       const text = editor.document.getText(editor.selection);
       if (!text) {
-        vscode.window.showWarningMessage('tokenprice: Select some text first');
+        vscode.window.showWarningMessage('llm-costs: Select some text first');
         return;
       }
-      const config = vscode.workspace.getConfiguration('tokenprice');
+      const config = vscode.workspace.getConfiguration('llm-costs');
       const modelId = config.get('defaultModel', 'claude-sonnet-4-5-20250514') as string;
       const model = findModel(modelId);
       const inputTokens = countTokens(text);
       const outputTokens = estimateOutputTokens(inputTokens);
       const cost = estimateCost(inputTokens, outputTokens, model);
       vscode.window.showInformationMessage(
-        `tokenprice: ~${inputTokens} tokens | ${model.name}: $${cost.toFixed(4)} estimated`
+        `llm-costs: ~${inputTokens} tokens | ${model.name}: $${cost.toFixed(4)} estimated`
       );
     })
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('tokenprice.compareModels', async () => {
+    vscode.commands.registerCommand('llm-costs.compareModels', async () => {
       const editor = vscode.window.activeTextEditor;
       if (!editor) return;
       const text = editor.document.getText(editor.selection);
       if (!text) {
-        vscode.window.showWarningMessage('tokenprice: Select some text first');
+        vscode.window.showWarningMessage('llm-costs: Select some text first');
         return;
       }
       const inputTokens = countTokens(text);
@@ -124,28 +124,28 @@ export function activate(context: vscode.ExtensionContext): void {
       }));
 
       await vscode.window.showQuickPick(items, {
-        title: `tokenprice: ~${inputTokens} tokens, compare all models`,
+        title: `llm-costs: ~${inputTokens} tokens, compare all models`,
         placeHolder: 'Models sorted by cost (cheapest first)',
       });
     })
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('tokenprice.setModel', async () => {
+    vscode.commands.registerCommand('llm-costs.setModel', async () => {
       const items = MODELS.map(m => ({
         label: m.name,
         description: `$${m.inputPrice}/M in · $${m.outputPrice}/M out`,
         detail: m.provider,
       }));
       const picked = await vscode.window.showQuickPick(items, {
-        title: 'tokenprice: Select default model',
+        title: 'llm-costs: Select default model',
         placeHolder: 'Choose a model for cost estimation',
       });
       if (picked) {
         const model = MODELS.find(m => m.name === picked.label);
         if (model) {
-          await vscode.workspace.getConfiguration('tokenprice').update('defaultModel', model.id, true);
-          vscode.window.showInformationMessage(`tokenprice: Default model set to ${model.name}`);
+          await vscode.workspace.getConfiguration('llm-costs').update('defaultModel', model.id, true);
+          vscode.window.showInformationMessage(`llm-costs: Default model set to ${model.name}`);
         }
       }
     })

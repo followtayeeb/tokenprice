@@ -1,19 +1,19 @@
-# tokenprice — Claude Code Project Guide
+# llm-costs — Claude Code Project Guide
 
 ## Project Overview
 
-**Name:** tokenprice  
+**Name:** llm-costs  
 **Tagline:** "Know before you send. Compare LLM costs in your terminal."  
 **Language:** TypeScript (Node.js 18+)  
-**Distribution:** npm (`npm install -g tokenprice`) + npx (`npx tokenprice`)  
+**Distribution:** npm (`npm install -g llm-costs`) + npx (`npx llm-costs`)  
 **License:** MIT  
 
-tokenprice is a universal LLM cost CLI tool that helps developers estimate, compare, and track the costs of using different Large Language Models (LLMs) before sending requests. It's written in TypeScript, runs in the terminal, and requires zero configuration.
+llm-costs is a universal LLM cost CLI tool that helps developers estimate, compare, and track the costs of using different Large Language Models (LLMs) before sending requests. It's written in TypeScript, runs in the terminal, and requires zero configuration.
 
 ## Architecture
 
 ```
-tokenprice/
+llm-costs/
 ├── src/
 │   ├── index.ts          # CLI entry point (commander.js)
 │   ├── tokenizer.ts      # Token counting (tiktoken + fallbacks)
@@ -100,40 +100,40 @@ npm run release      # Bump version + publish to npm
 ### Phase 1 Examples
 ```bash
 # Quick cost estimate for a single prompt
-tokenprice "Explain quantum computing" --model claude-sonnet-4-5
+llm-costs "Explain quantum computing" --model claude-sonnet-4-5
 
 # Compare all models
-tokenprice "Your prompt here" --compare
+llm-costs "Your prompt here" --compare
 
 # Read from a file
-cat prompt.txt | tokenprice --model gpt-4o
+cat prompt.txt | llm-costs --model gpt-4o
 
 # Interactive mode (Phase 3)
-tokenprice -i
+llm-costs -i
 ```
 
 ### Phase 2 Examples
 ```bash
 # Batch processing
-tokenprice batch prompts.jsonl --model claude-sonnet-4-5
+llm-costs batch prompts.jsonl --model claude-sonnet-4-5
 
 # Budget projection
-tokenprice budget --model gpt-4o --requests-per-day 500 --avg-tokens 2000
+llm-costs budget --model gpt-4o --requests-per-day 500 --avg-tokens 2000
 
 # CI/CD guard
-tokenprice guard prompt.txt --model gpt-4o --max-cost 0.50
+llm-costs guard prompt.txt --model gpt-4o --max-cost 0.50
 
 # Watch API usage logs
-tokenprice watch --log openai_usage.log
+llm-costs watch --log openai_usage.log
 ```
 
 ### Phase 3 Examples
 ```bash
 # MCP server mode
-tokenprice --mcp
+llm-costs --mcp
 
 # Interactive with autocomplete
-tokenprice -i
+llm-costs -i
 ```
 
 ## Pricing Data Format
@@ -253,7 +253,7 @@ Example:
 - Target: Top 5 products
 
 **HN Show HN:**
-- Submit to HN: "Show HN: tokenprice — Universal LLM Cost CLI"
+- Submit to HN: "Show HN: llm-costs — Universal LLM Cost CLI"
 - Show the beautiful table output
 - Target: Front page (top 10)
 

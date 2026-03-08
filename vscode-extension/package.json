@@ -1,13 +1,13 @@
 {
-  "name": "tokenprice-vscode",
-  "displayName": "tokenprice — LLM Cost Estimator",
+  "name": "llm-costs-vscode",
+  "displayName": "llm-costs — LLM Cost Estimator",
   "description": "Estimate and compare LLM API costs directly in VS Code. Select text, see token counts and pricing instantly.",
   "version": "0.1.0",
   "publisher": "followtayeeb",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/followtayeeb/tokenprice"
+    "url": "https://github.com/followtayeeb/llm-costs"
   },
   "engines": {
     "vscode": "^1.85.0"
@@ -32,40 +32,40 @@
   "contributes": {
     "commands": [
       {
-        "command": "tokenprice.estimateCost",
-        "title": "tokenprice: Estimate Cost"
+        "command": "llm-costs.estimateCost",
+        "title": "llm-costs: Estimate Cost"
       },
       {
-        "command": "tokenprice.compareModels",
-        "title": "tokenprice: Compare Models"
+        "command": "llm-costs.compareModels",
+        "title": "llm-costs: Compare Models"
       },
       {
-        "command": "tokenprice.setModel",
-        "title": "tokenprice: Set Default Model"
+        "command": "llm-costs.setModel",
+        "title": "llm-costs: Set Default Model"
       }
     ],
     "keybindings": [
       {
-        "command": "tokenprice.estimateCost",
+        "command": "llm-costs.estimateCost",
         "key": "ctrl+shift+t",
         "mac": "cmd+shift+t",
         "when": "editorTextFocus"
       }
     ],
     "configuration": {
-      "title": "tokenprice",
+      "title": "llm-costs",
       "properties": {
-        "tokenprice.defaultModel": {
+        "llm-costs.defaultModel": {
           "type": "string",
           "default": "claude-sonnet-4-5-20250514",
           "description": "Default model ID for cost estimation"
         },
-        "tokenprice.showStatusBar": {
+        "llm-costs.showStatusBar": {
           "type": "boolean",
           "default": true,
           "description": "Show token count and cost in the status bar when text is selected"
         },
-        "tokenprice.autoEstimate": {
+        "llm-costs.autoEstimate": {
           "type": "boolean",
           "default": true,
           "description": "Automatically estimate cost when text is selected"

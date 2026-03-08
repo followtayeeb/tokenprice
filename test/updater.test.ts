@@ -217,7 +217,7 @@ describe("appendHistory", () => {
   it("exports HISTORY_FILE path", async () => {
     const { HISTORY_FILE } = await import("../src/updater.js");
     expect(typeof HISTORY_FILE).toBe("string");
-    expect(HISTORY_FILE).toContain(".tokenprice");
+    expect(HISTORY_FILE).toContain(".llm-costs");
     expect(HISTORY_FILE).toContain("pricing-history.json");
   });
 

@@ -1,5 +1,5 @@
 /**
- * Interactive REPL mode for tokenprice
+ * Interactive REPL mode for llm-costs
  * Provides a looping prompt-based interface with tab completion for model names
  */
 
@@ -59,7 +59,7 @@ function printBanner(): void {
       [
         "",
         "╔══════════════════════════════════════════╗",
-        "║  tokenprice — interactive mode            ║",
+        "║  llm-costs — interactive mode             ║",
         "║  Tab to autocomplete model names          ║",
         '║  Type "exit" or Ctrl+C to quit            ║',
         "╚══════════════════════════════════════════╝",

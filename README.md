@@ -1,9 +1,9 @@
-# tokenprice
+# llm-costs
 
 > Know before you send. Compare LLM costs in your terminal.
 
-[![npm version](https://img.shields.io/npm/v/tokenprice.svg?style=flat-square)](https://www.npmjs.com/package/tokenprice)
-[![npm downloads](https://img.shields.io/npm/dw/tokenprice.svg?style=flat-square)](https://www.npmjs.com/package/tokenprice)
+[![npm version](https://img.shields.io/npm/v/llm-costs.svg?style=flat-square)](https://www.npmjs.com/package/llm-costs)
+[![npm downloads](https://img.shields.io/npm/dw/llm-costs.svg?style=flat-square)](https://www.npmjs.com/package/llm-costs)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](CONTRIBUTING.md)
 [![Node Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg?style=flat-square)](https://nodejs.org)
@@ -13,7 +13,7 @@
 Estimate costs and compare across 20+ models:
 
 ```bash
-$ tokenprice "Explain quantum computing" --compare
+$ llm-costs "Explain quantum computing" --compare
 
 ╔════════════════════════════╦═══════════╦═══════════╦════════════╗
 ║ Model                      ║ Input     ║ Output    ║ Total      ║
@@ -42,24 +42,24 @@ Cheapest: Gemini 2.5 Flash ($0.00040)
 ### Zero Setup (Try Now)
 
 ```bash
-npx tokenprice "Hello world" --compare
+npx llm-costs "Hello world" --compare
 ```
 
 ### Permanent Install
 
 ```bash
 # Global installation
-npm install -g tokenprice
+npm install -g llm-costs
 
 # Or use Homebrew (coming soon)
-brew install tokenprice
+brew install llm-costs
 ```
 
 ### Verify Installation
 
 ```bash
-tokenprice --version
-# tokenprice v0.1.0
+llm-costs --version
+# llm-costs v0.1.0
 ```
 
 ## Quick Start
@@ -67,7 +67,7 @@ tokenprice --version
 ### Estimate Cost for a Single Model
 
 ```bash
-tokenprice "Explain quantum computing in simple terms" --model claude-sonnet-4-5
+llm-costs "Explain quantum computing in simple terms" --model claude-sonnet-4-5
 
 # Output:
 # Input tokens: 6 | Output estimate: ~80
@@ -77,7 +77,7 @@ tokenprice "Explain quantum computing in simple terms" --model claude-sonnet-4-5
 ### Compare All Models
 
 ```bash
-tokenprice "Your prompt here" --compare
+llm-costs "Your prompt here" --compare
 
 # Shows beautiful table with all 20+ models sorted by cost
 ```
@@ -85,27 +85,27 @@ tokenprice "Your prompt here" --compare
 ### Read from File
 
 ```bash
-tokenprice --file prompt.txt --compare
+llm-costs --file prompt.txt --compare
 
 # Or via pipe
-cat system-prompt.txt | tokenprice --model gpt-4o
+cat system-prompt.txt | llm-costs --model gpt-4o
 ```
 
 ### Estimate Tokens Only
 
 ```bash
-tokenprice count "Hello world"
+llm-costs count "Hello world"
 # Output: 3 tokens (using heuristic)
 
 # With OpenAI models (uses tiktoken)
-tokenprice count "Hello world" --model gpt-4o
+llm-costs count "Hello world" --model gpt-4o
 # Output: 2 tokens (accurate)
 ```
 
 ### Get Token Count with Cost
 
 ```bash
-tokenprice "Your prompt" --model claude-opus-4-5 --show-tokens
+llm-costs "Your prompt" --model claude-opus-4-5 --show-tokens
 
 # Output:
 # Input: 3 tokens ($0.000045)
@@ -116,7 +116,7 @@ tokenprice "Your prompt" --model claude-opus-4-5 --show-tokens
 ### JSON Output for Scripts
 
 ```bash
-tokenprice "hello" --model gpt-4o --output json
+llm-costs "hello" --model gpt-4o --output json
 
 # Output:
 # {
@@ -132,7 +132,7 @@ tokenprice "hello" --model gpt-4o --output json
 
 ## Supported Models
 
-tokenprice supports 20+ models from the top LLM providers:
+llm-costs supports 20+ models from the top LLM providers:
 
 ### Anthropic
 
@@ -186,7 +186,7 @@ tokenprice supports 20+ models from the top LLM providers:
 |-------|-------|--------|---------|-------|
 | Llama-3.3-70B | $0.59/M | $0.79/M | 8K | No |
 
-## Why tokenprice?
+## Why llm-costs?
 
 1. **Zero Setup** — No API keys, no configuration, no fuss. Just run it.
 
@@ -202,7 +202,7 @@ Estimate costs for many prompts at once:
 
 ```bash
 # Process JSONL file (one prompt per line)
-tokenprice batch prompts.jsonl --model gpt-4o
+llm-costs batch prompts.jsonl --model gpt-4o
 
 # Output:
 # Total prompts: 1000
@@ -216,7 +216,7 @@ tokenprice batch prompts.jsonl --model gpt-4o
 Plan your LLM spending:
 
 ```bash
-tokenprice budget --model gpt-4o --requests-per-day 500 --avg-tokens 2000
+llm-costs budget --model gpt-4o --requests-per-day 500 --avg-tokens 2000
 
 # Output:
 # Daily cost: $2.50
@@ -230,7 +230,7 @@ Prevent runaway costs in your pipelines:
 
 ```bash
 # Fail if cost exceeds threshold
-tokenprice guard prompt.txt --model gpt-4o --max-cost 0.50
+llm-costs guard prompt.txt --model gpt-4o --max-cost 0.50
 
 # Exit code 0 if cost <= $0.50
 # Exit code 1 if cost > $0.50 (suitable for CI/CD)
@@ -241,7 +241,7 @@ tokenprice guard prompt.txt --model gpt-4o --max-cost 0.50
 Monitor real-time API usage:
 
 ```bash
-tokenprice watch --log openai_usage.log
+llm-costs watch --log openai_usage.log
 ```
 
 ### Update Pricing (Phase 2)
@@ -249,14 +249,14 @@ tokenprice watch --log openai_usage.log
 Keep pricing up-to-date:
 
 ```bash
-tokenprice --update-pricing
+llm-costs --update-pricing
 
 # Fetches latest pricing from GitHub repo
 ```
 
 ## Comparison vs Alternatives
 
-| Feature | tokenprice | tokencost | llm-pricing | token-tally |
+| Feature | llm-costs | tokencost | llm-pricing | token-tally |
 |---------|---|---|---|---|
 | **CLI** | Yes | No | No | Yes |
 | **Zero Setup** | Yes | No | No | Yes |
@@ -268,7 +268,7 @@ tokenprice --update-pricing
 
 ## GitHub Actions Integration
 
-Use tokenprice in your CI/CD workflow:
+Use llm-costs in your CI/CD workflow:
 
 ```yaml
 name: Cost Check
@@ -281,7 +281,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
-      - uses: followtayeeb/tokenprice-action@v1
+      - uses: followtayeeb/llm-costs-action@v1
         with:
           prompt-file: src/system-prompt.txt
           model: claude-sonnet-4-5
@@ -303,8 +303,8 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 ```bash
 # Clone repo
-git clone https://github.com/followtayeeb/tokenprice.git
-cd tokenprice
+git clone https://github.com/followtayeeb/llm-costs.git
+cd llm-costs
 
 # Install dependencies
 npm install
@@ -327,7 +327,7 @@ npm run format && npm run lint
 
 ## FAQ
 
-**Q: Does tokenprice make actual API calls?**  
+**Q: Does llm-costs make actual API calls?**  
 A: No, it estimates costs locally. No API keys required, no data leaves your machine.
 
 **Q: How accurate are token estimates?**  
@@ -360,5 +360,5 @@ Built with curiosity by followtayeeb
 
 **Have questions or feature requests?** Open an issue on GitHub or reach out on Twitter.
 
-**Like tokenprice?** Please star us and share! Your support means the world.
+**Like llm-costs?** Please star us and share! Your support means the world.
 

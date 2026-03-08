@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * tokenprice - Know before you send. Compare LLM costs in your terminal.
+ * llm-costs - Know before you send. Compare LLM costs in your terminal.
  * Main CLI entry point
  */
 
@@ -76,7 +76,7 @@ async function main(): Promise<void> {
   }
 
   program
-    .name("tokenprice")
+    .name("llm-costs")
     .description(
       "Know before you send. Compare LLM costs in your terminal."
     )

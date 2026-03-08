@@ -30,12 +30,12 @@ interface CachedPricing extends PricingDatabase {
   lastChecked: string;
 }
 
-const CACHE_DIR = join(homedir(), ".tokenprice");
+const CACHE_DIR = join(homedir(), ".llm-costs");
 const CACHE_FILE = join(CACHE_DIR, "pricing.json");
 export const HISTORY_FILE = join(CACHE_DIR, "pricing-history.json");
 
 const PRICING_URL =
-  "https://raw.githubusercontent.com/followtayeeb/tokenprice/main/data/pricing.json";
+  "https://raw.githubusercontent.com/followtayeeb/llm-costs/main/data/pricing.json";
 
 const STALE_DAYS = 7;
 const FETCH_TIMEOUT_MS = 5000;
@@ -146,7 +146,7 @@ function formatUpdateMessage(
     parts.push(`-${removedModels.length} removed`);
 
   const detail = parts.join(", ");
-  const msg = `\u21BB Pricing updated: ${detail}. Run tokenprice changelog to see details.`;
+  const msg = `\u21BB Pricing updated: ${detail}. Run llm-costs changelog to see details.`;
   return useColor ? chalk.dim(chalk.gray(msg)) : msg;
 }
 

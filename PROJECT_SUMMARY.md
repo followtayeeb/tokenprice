@@ -1,4 +1,4 @@
-# tokenprice — Project Summary
+# llm-costs — Project Summary
 
 **Status:** Production-Ready  
 **Version:** 0.1.0  
@@ -6,7 +6,7 @@
 
 ## Project Overview
 
-tokenprice is a universal LLM cost estimation CLI tool written in TypeScript. It enables developers to estimate, compare, and track the costs of using different Large Language Models directly from the terminal, without leaving their workflow.
+llm-costs is a universal LLM cost estimation CLI tool written in TypeScript. It enables developers to estimate, compare, and track the costs of using different Large Language Models directly from the terminal, without leaving their workflow.
 
 **Tagline:** "Know before you send. Compare LLM costs in your terminal."
 
@@ -142,7 +142,7 @@ This project scaffold includes **everything** needed to launch a production-qual
 ## File Structure
 
 ```
-tokenprice/
+llm-costs/
 ├── .github/
 │   └── workflows/
 │       ├── ci.yml                 # CI/CD pipeline
@@ -257,22 +257,22 @@ npm run format && npm run lint
 
 ```bash
 # Single model estimate
-tokenprice "Your prompt" --model gpt-4o
+llm-costs "Your prompt" --model gpt-4o
 
 # Compare all models
-tokenprice "Your prompt" --compare
+llm-costs "Your prompt" --compare
 
 # Count tokens
-tokenprice count "Hello world"
+llm-costs count "Hello world"
 
 # List models
-tokenprice list --provider Anthropic
+llm-costs list --provider Anthropic
 
 # JSON output
-tokenprice "prompt" --compare --output json
+llm-costs "prompt" --compare --output json
 
 # From file
-tokenprice --file prompt.txt --compare
+llm-costs --file prompt.txt --compare
 ```
 
 ## Code Quality Standards

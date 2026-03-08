@@ -1,4 +1,4 @@
-# tokenprice — Product Requirements Document (PRD)
+# llm-costs — Product Requirements Document (PRD)
 
 **Document Version:** 1.0  
 **Last Updated:** 2026-03-03  
@@ -8,7 +8,7 @@
 
 ## Executive Summary
 
-**tokenprice** is a universal LLM cost estimation CLI tool that helps developers estimate, compare, and track the costs of using different Large Language Models (LLMs) directly from the terminal. Today, developers using LLM APIs must navigate multiple provider dashboards, web apps, or Python libraries to understand costs before sending requests. tokenprice changes this by making cost estimation as simple as typing a command.
+**llm-costs** is a universal LLM cost estimation CLI tool that helps developers estimate, compare, and track the costs of using different Large Language Models (LLMs) directly from the terminal. Today, developers using LLM APIs must navigate multiple provider dashboards, web apps, or Python libraries to understand costs before sending requests. llm-costs changes this by making cost estimation as simple as typing a command.
 
 **Problem:** "How much will this cost?" should take 2 seconds to answer in the terminal, not 2 minutes in a web browser.
 
@@ -91,19 +91,19 @@
 ### Phase 1 (MVP)
 
 1. As an **AI developer**, I want to **estimate the cost of my prompt for a single model**, so that **I know if I can afford to send this request**.
-   - Acceptance: `tokenprice "Hello world" --model claude-sonnet-4-5` returns cost in <500ms
+   - Acceptance: `llm-costs "Hello world" --model claude-sonnet-4-5` returns cost in <500ms
 
 2. As an **AI developer**, I want to **compare costs across all available models**, so that **I can pick the most cost-effective model**.
-   - Acceptance: `tokenprice "Hello world" --compare` shows all 20+ models sorted by cost
+   - Acceptance: `llm-costs "Hello world" --compare` shows all 20+ models sorted by cost
 
 3. As a **DevOps engineer**, I want to **count tokens for a prompt**, so that **I can validate token usage in my logs**.
-   - Acceptance: `tokenprice count "Some text"` returns token count (±5% accuracy)
+   - Acceptance: `llm-costs count "Some text"` returns token count (±5% accuracy)
 
-4. As a **researcher**, I want to **read prompts from stdin**, so that **I can pipe files and scripts into tokenprice**.
-   - Acceptance: `cat prompts.txt | tokenprice --model gpt-4o` works without tty
+4. As a **researcher**, I want to **read prompts from stdin**, so that **I can pipe files and scripts into llm-costs**.
+   - Acceptance: `cat prompts.txt | llm-costs --model gpt-4o` works without tty
 
-5. As an **independent developer**, I want to **install and run tokenprice with zero configuration**, so that **I don't need to set up API keys or config files**.
-   - Acceptance: `npx tokenprice "hello"` works instantly, no setup required
+5. As an **independent developer**, I want to **install and run llm-costs with zero configuration**, so that **I don't need to set up API keys or config files**.
+   - Acceptance: `npx llm-costs "hello"` works instantly, no setup required
 
 6. As an **AI developer**, I want to **see token count breakdown (input vs output)**, so that **I understand the cost composition**.
    - Acceptance: Output shows: "Input tokens: 50 | Output tokens: ~200 | Total: ~250"
@@ -115,19 +115,19 @@
    - Acceptance: Table output shows ✓ next to batch-compatible models
 
 9. As an **AI developer**, I want to **use relative model names** (e.g., "claude" or "gpt"), so that **I don't need to memorize exact model IDs**.
-   - Acceptance: `tokenprice "hello" --model claude` suggests Claude models
+   - Acceptance: `llm-costs "hello" --model claude` suggests Claude models
 
 10. As a **CI/CD engineer**, I want to **output results as JSON**, so that **I can parse results in my scripts**.
-    - Acceptance: `tokenprice "hello" --output json` returns valid JSON
+    - Acceptance: `llm-costs "hello" --output json` returns valid JSON
 
-11. As a **terminal enthusiast**, I want to **disable colored output**, so that **tokenprice works in CI environments without color codes**.
-    - Acceptance: `NO_COLOR=1 tokenprice "hello" --compare` outputs plain text
+11. As a **terminal enthusiast**, I want to **disable colored output**, so that **llm-costs works in CI environments without color codes**.
+    - Acceptance: `NO_COLOR=1 llm-costs "hello" --compare` outputs plain text
 
 12. As an **AI developer**, I want to **see context window sizes**, so that **I know if my prompt fits in the model**.
     - Acceptance: Comparison table shows context window for each model
 
 13. As a **DevOps engineer**, I want to **update pricing data**, so that **I have the latest costs from providers**.
-    - Acceptance: `tokenprice --update-pricing` fetches latest from GitHub repo
+    - Acceptance: `llm-costs --update-pricing` fetches latest from GitHub repo
 
 14. As an **AI developer**, I want to **see a beautiful, easy-to-read comparison table**, so that **I can make quick decisions**.
     - Acceptance: Table uses color, alignment, and formatting to highlight cheapest option
@@ -138,27 +138,27 @@
 ### Phase 2
 
 16. As a **researcher**, I want to **process batch JSONL files**, so that **I can estimate costs for 1M prompts**.
-    - Acceptance: `tokenprice batch prompts.jsonl --model gpt-4o` returns total cost + per-request breakdown
+    - Acceptance: `llm-costs batch prompts.jsonl --model gpt-4o` returns total cost + per-request breakdown
 
 17. As a **DevOps engineer**, I want to **project monthly costs based on request frequency**, so that **I can budget for LLM infrastructure**.
-    - Acceptance: `tokenprice budget --model gpt-4o --requests-per-day 1000 --avg-tokens 2000` returns monthly projection
+    - Acceptance: `llm-costs budget --model gpt-4o --requests-per-day 1000 --avg-tokens 2000` returns monthly projection
 
 18. As a **platform engineer**, I want to **watch API usage logs in real-time**, so that **I can track actual costs as they happen**.
-    - Acceptance: `tokenprice watch --log openai_usage.log` streams usage in real-time
+    - Acceptance: `llm-costs watch --log openai_usage.log` streams usage in real-time
 
 19. As a **CI/CD engineer**, I want to **fail builds if costs exceed a threshold**, so that **I can prevent runaway costs**.
-    - Acceptance: `tokenprice guard prompts.txt --model gpt-4o --max-cost 1.00` exits with code 1 if cost > $1.00
+    - Acceptance: `llm-costs guard prompts.txt --model gpt-4o --max-cost 1.00` exits with code 1 if cost > $1.00
 
 20. As a **researcher**, I want to **export results as CSV**, so that **I can load results into Excel/Python**.
-    - Acceptance: `tokenprice batch prompts.jsonl --output csv` returns CSV with columns: prompt, tokens, cost
+    - Acceptance: `llm-costs batch prompts.jsonl --output csv` returns CSV with columns: prompt, tokens, cost
 
 ### Phase 3
 
-21. As a **MCP developer**, I want to **run tokenprice as an MCP server**, so that **Claude/LLMs can estimate costs.**.
-    - Acceptance: `tokenprice --mcp` starts MCP server on stdio, registers estimate/compare tools
+21. As a **MCP developer**, I want to **run llm-costs as an MCP server**, so that **Claude/LLMs can estimate costs.**.
+    - Acceptance: `llm-costs --mcp` starts MCP server on stdio, registers estimate/compare tools
 
 22. As an **AI developer**, I want to **use interactive mode with autocomplete**, so that **I can discover models and options interactively**.
-    - Acceptance: `tokenprice -i` opens interactive shell with model autocomplete
+    - Acceptance: `llm-costs -i` opens interactive shell with model autocomplete
 
 23. As a **VS Code user**, I want to **see inline cost estimates in my editor**, so that **I can estimate costs while writing prompts**.
     - Acceptance: VS Code extension shows cost decorators above prompts
@@ -167,7 +167,7 @@
     - Acceptance: GitHub Action exists and can be added to workflows
 
 25. As a **researcher**, I want to **see cost breakdown by provider**, so that **I can understand provider distribution**.
-    - Acceptance: `tokenprice --compare --breakdown` shows subtotals by provider (Anthropic, OpenAI, etc.)
+    - Acceptance: `llm-costs --compare --breakdown` shows subtotals by provider (Anthropic, OpenAI, etc.)
 
 ---
 
@@ -177,13 +177,13 @@
 
 | Requirement | Priority | Acceptance Criteria |
 |---|---|---|
-| **Single-model cost estimation** | P0 | `tokenprice "<text>" --model <model>` outputs cost in <500ms. Accuracy within ±10% of actual. |
-| **Multi-model comparison** | P0 | `tokenprice "<text>" --compare` shows all models sorted by total cost, colored table, <1s response. |
+| **Single-model cost estimation** | P0 | `llm-costs "<text>" --model <model>` outputs cost in <500ms. Accuracy within ±10% of actual. |
+| **Multi-model comparison** | P0 | `llm-costs "<text>" --compare` shows all models sorted by total cost, colored table, <1s response. |
 | **Token counting (OpenAI)** | P0 | Uses @dqbd/tiktoken for OpenAI models, accuracy >99%. |
 | **Token counting (fallback)** | P0 | Fallback heuristic (chars/3.5) available when tiktoken unavailable. |
 | **Output estimation** | P0 | Estimate output tokens based on model type, accuracy ±20%. |
 | **Beautiful table output** | P0 | cli-table3 with colors (green=cheapest), borders, alignment. Shows input/output/total costs. |
-| **Stdin support** | P0 | Read prompts from pipes: `cat file.txt \| tokenprice --model gpt-4o`. |
+| **Stdin support** | P0 | Read prompts from pipes: `cat file.txt \| llm-costs --model gpt-4o`. |
 | **Model name matching** | P1 | `--model claude` suggests/matches Claude models. Accept partial names. |
 | **JSON output** | P1 | `--output json` returns valid JSON: {model, inputTokens, outputTokens, inputCost, outputCost, totalCost}. |
 | **CSV output** | P1 | `--output csv` returns CSV format. |
@@ -192,8 +192,8 @@
 | **Color/No-color support** | P0 | Respect --no-color flag and NO_COLOR env var. |
 | **Context window display** | P1 | Show context window for each model in comparison table. |
 | **Batch API indicator** | P1 | Show ✓ for models supporting batch API. |
-| **Help and documentation** | P0 | `tokenprice --help` shows all commands, flags, examples. |
-| **Version command** | P1 | `tokenprice --version` shows current version. |
+| **Help and documentation** | P0 | `llm-costs --help` shows all commands, flags, examples. |
+| **Version command** | P1 | `llm-costs --version` shows current version. |
 | **20+ models** | P0 | Support Anthropic (3), OpenAI (5), Google (2), DeepSeek (2), Mistral (2), Cohere (2), Groq (1+) models. |
 | **Startup time < 200ms** | P0 | Full CLI startup to ready state in <200ms on modern hardware. |
 
@@ -201,20 +201,20 @@
 
 | Requirement | Priority | Acceptance Criteria |
 |---|---|---|
-| **Batch JSONL processing** | P0 | `tokenprice batch prompts.jsonl --model <model>` processes JSONL (one prompt per line), outputs total + per-line costs. |
-| **Budget projection** | P0 | `tokenprice budget --model <model> --requests-per-day N --avg-tokens M` calculates weekly/monthly cost. |
-| **Log watching** | P1 | `tokenprice watch --log path.log` tails log file, estimates costs in real-time. |
-| **CI/CD budget guard** | P0 | `tokenprice guard <file> --model <model> --max-cost $X` exits with code 1 if cost > X. |
-| **Pricing auto-update** | P1 | GitHub Actions workflow updates pricing.json weekly. `tokenprice --update-pricing` manually fetches. |
-| **CSV input support** | P1 | `tokenprice batch prompts.csv --model <model>` processes CSV files. |
+| **Batch JSONL processing** | P0 | `llm-costs batch prompts.jsonl --model <model>` processes JSONL (one prompt per line), outputs total + per-line costs. |
+| **Budget projection** | P0 | `llm-costs budget --model <model> --requests-per-day N --avg-tokens M` calculates weekly/monthly cost. |
+| **Log watching** | P1 | `llm-costs watch --log path.log` tails log file, estimates costs in real-time. |
+| **CI/CD budget guard** | P0 | `llm-costs guard <file> --model <model> --max-cost $X` exits with code 1 if cost > X. |
+| **Pricing auto-update** | P1 | GitHub Actions workflow updates pricing.json weekly. `llm-costs --update-pricing` manually fetches. |
+| **CSV input support** | P1 | `llm-costs batch prompts.csv --model <model>` processes CSV files. |
 | **Performance** | P0 | Process 1M prompts in <60 seconds (bulk mode). |
 
 ### Phase 3 (Ecosystem) — Weeks 9+
 
 | Requirement | Priority | Acceptance Criteria |
 |---|---|---|
-| **MCP server mode** | P2 | `tokenprice --mcp` starts MCP server, exports estimate/compare tools. |
-| **Interactive mode** | P2 | `tokenprice -i` opens interactive REPL with model autocomplete. |
+| **MCP server mode** | P2 | `llm-costs --mcp` starts MCP server, exports estimate/compare tools. |
+| **Interactive mode** | P2 | `llm-costs -i` opens interactive REPL with model autocomplete. |
 | **VS Code extension** | P2 | Extension displays inline cost estimates for prompts in editors. |
 | **GitHub Action** | P2 | Official GitHub Action for cost checks in workflows. |
 | **Cost breakdown** | P2 | `--breakdown` flag shows cost distribution by provider. |
@@ -319,7 +319,7 @@
 - [ ] Tag v0.1.0 in git
 - [ ] Run `npm publish` (should auto-publish via prepublishOnly)
 - [ ] Verify package on npmjs.com
-- [ ] Test `npx tokenprice "hello"` works
+- [ ] Test `npx llm-costs "hello"` works
 - [ ] Submit to Product Hunt (8-9am PT)
 - [ ] Prepare HN Show HN post (title, description, demo)
 - [ ] Post on Twitter/X (if applicable)

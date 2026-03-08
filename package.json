@@ -1,11 +1,11 @@
 {
-  "name": "tokenprice",
+  "name": "llm-costs",
   "version": "0.1.0",
   "description": "Know before you send. Compare LLM costs in your terminal.",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
-    "tokenprice": "./dist/index.js"
+    "llm-costs": "./dist/index.js"
   },
   "scripts": {
     "build": "tsc --project tsconfig.json",
@@ -67,10 +67,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/followtayeeb/tokenprice.git"
+    "url": "https://github.com/followtayeeb/llm-costs.git"
   },
   "bugs": {
-    "url": "https://github.com/followtayeeb/tokenprice/issues"
+    "url": "https://github.com/followtayeeb/llm-costs/issues"
   },
-  "homepage": "https://github.com/followtayeeb/tokenprice#readme"
+  "homepage": "https://github.com/followtayeeb/llm-costs#readme"
 }

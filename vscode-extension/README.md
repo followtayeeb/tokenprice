@@ -1,4 +1,4 @@
-# tokenprice — LLM Cost Estimator for VS Code
+# llm-costs — LLM Cost Estimator for VS Code
 
 Estimate and compare LLM API costs directly in your editor. Select text, see token counts and pricing instantly for 17 models across 6 providers.
 
@@ -17,16 +17,16 @@ Anthropic, OpenAI, Google, DeepSeek, Mistral, Cohere, Groq (17 models total).
 
 | Setting | Default | Description |
 |---|---|---|
-| `tokenprice.defaultModel` | `claude-sonnet-4-5-20250514` | Model ID used for single-model estimates |
-| `tokenprice.showStatusBar` | `true` | Show token/cost info in the status bar |
-| `tokenprice.autoEstimate` | `true` | Auto-update the status bar on selection change |
+| `llm-costs.defaultModel` | `claude-sonnet-4-5-20250514` | Model ID used for single-model estimates |
+| `llm-costs.showStatusBar` | `true` | Show token/cost info in the status bar |
+| `llm-costs.autoEstimate` | `true` | Auto-update the status bar on selection change |
 
 ## Usage
 
 1. Select text in the editor.
 2. Press **Ctrl+Shift+T** (or **Cmd+Shift+T** on macOS) to see the cost estimate.
-3. Run **tokenprice: Compare Models** from the command palette to compare all models.
-4. Run **tokenprice: Set Default Model** to change your default.
+3. Run **llm-costs: Compare Models** from the command palette to compare all models.
+4. Run **llm-costs: Set Default Model** to change your default.
 
 ## How It Works
 

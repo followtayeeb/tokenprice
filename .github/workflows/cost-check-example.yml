@@ -15,7 +15,7 @@ jobs:
 
       - name: Check cost for sample prompt
         id: cost
-        uses: ./.github/actions/tokenprice
+        uses: ./.github/actions/llm-costs
         with:
           prompt: "Explain the theory of relativity in simple terms"
           model: gpt-4o
@@ -38,7 +38,7 @@ jobs:
 
       - name: Check cost for prompt file
         id: cost
-        uses: ./.github/actions/tokenprice
+        uses: ./.github/actions/llm-costs
         with:
           prompt-file: /tmp/prompt.txt
           model: claude-sonnet-4-5

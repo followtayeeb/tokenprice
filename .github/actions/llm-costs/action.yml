@@ -1,4 +1,4 @@
-name: "tokenprice Cost Check"
+name: "llm-costs Cost Check"
 description: "Estimate LLM API costs and fail if they exceed a budget threshold"
 branding:
   icon: "dollar-sign"
@@ -39,7 +39,7 @@ runs:
       with:
         node-version: "20"
 
-    - name: Run tokenprice guard
+    - name: Run llm-costs guard
       id: guard
       shell: bash
       env:
@@ -67,8 +67,8 @@ runs:
         ARGS+=("--max-cost" "$TP_MAX_COST")
         ARGS+=("--output" "json")
 
-        # Run tokenprice guard and capture output
-        OUTPUT=$(npx tokenprice@latest "${ARGS[@]}" 2>&1)
+        # Run llm-costs guard and capture output
+        OUTPUT=$(npx llm-costs@latest "${ARGS[@]}" 2>&1)
         EXIT_CODE=$?
 
         echo "Raw output:"
@@ -115,7 +115,7 @@ runs:
         fi
 
         {
-          echo "## :${ICON}: tokenprice Cost Check: ${VERDICT}"
+          echo "## :${ICON}: llm-costs Cost Check: ${VERDICT}"
           echo ""
           echo "| Field | Value |"
           echo "|-------|-------|"

@@ -373,7 +373,7 @@ export function calculateCost(
  */
 export async function fetchLatestPricing(useColor: boolean): Promise<void> {
   const url =
-    "https://raw.githubusercontent.com/followtayeeb/tokenprice/main/data/pricing.json";
+    "https://raw.githubusercontent.com/followtayeeb/llm-costs/main/data/pricing.json";
   const dataPath = join(__dirname, "..", "data", "pricing.json");
 
   const green = useColor ? chalk.green : (s: string) => s;

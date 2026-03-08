@@ -1,6 +1,6 @@
-# Contributing to tokenprice
+# Contributing to llm-costs
 
-Thank you for your interest in contributing to tokenprice! We welcome all contributions, from bug reports to new features. This guide will help you get started.
+Thank you for your interest in contributing to llm-costs! We welcome all contributions, from bug reports to new features. This guide will help you get started.
 
 ## Code of Conduct
 
@@ -97,8 +97,8 @@ The easiest way to contribute! To add a new LLM model:
 
 ```bash
 # Clone the repo
-git clone https://github.com/followtayeeb/tokenprice.git
-cd tokenprice
+git clone https://github.com/followtayeeb/llm-costs.git
+cd llm-costs
 
 # Install dependencies
 npm install
@@ -254,5 +254,5 @@ By contributing, you agree your code will be licensed under MIT.
 
 ---
 
-Thanks for making tokenprice better!
+Thanks for making llm-costs better!
 

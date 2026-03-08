@@ -1,6 +1,6 @@
 /**
  * MCP (Model Context Protocol) server mode
- * Exposes tokenprice functionality as MCP tools over stdio
+ * Exposes llm-costs functionality as MCP tools over stdio
  */
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
@@ -20,11 +20,11 @@ import {
 } from "./tokenizer.js";
 
 /**
- * Run the tokenprice MCP server over stdio
+ * Run the llm-costs MCP server over stdio
  */
 export async function runMCPServer(): Promise<void> {
   const server = new McpServer(
-    { name: "tokenprice", version: "1.0.0" },
+    { name: "llm-costs", version: "1.0.0" },
     { capabilities: { tools: {} } }
   );
 

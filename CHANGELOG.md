@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Initial release of tokenprice
+- Initial release of llm-costs
 - Single-model cost estimation with `--model` flag
 - Multi-model cost comparison with `--compare` flag
 - Support for 17 LLM models from 7 providers:
@@ -27,8 +27,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Colored output support with `--no-color` flag and `NO_COLOR` env var
 - File input support with `--file` flag
 - Stdin pipe support
-- Token counting command: `tokenprice count`
-- Model listing command: `tokenprice list`
+- Token counting command: `llm-costs count`
+- Model listing command: `llm-costs list`
 - Comprehensive CLI help and documentation
 - Complete TypeScript strict mode implementation
 - Unit tests for pricing and tokenizer modules

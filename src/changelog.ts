@@ -12,7 +12,7 @@ import type { HistoryEntry } from "./updater.js";
 
 export { HistoryEntry };
 
-const HISTORY_FILE = join(homedir(), ".tokenprice", "pricing-history.json");
+const HISTORY_FILE = join(homedir(), ".llm-costs", "pricing-history.json");
 
 export interface ChangelogOptions {
   since?: string;
@@ -36,7 +36,7 @@ function parseSince(since: string): Date {
 }
 
 /**
- * Display pricing changelog from ~/.tokenprice/pricing-history.json.
+ * Display pricing changelog from ~/.llm-costs/pricing-history.json.
  */
 export async function runChangelog(options: ChangelogOptions): Promise<void> {
   const { since, useColor } = options;
