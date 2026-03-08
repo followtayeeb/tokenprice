@@ -1,0 +1,25 @@
+# Source & tests
+src/
+test/
+scripts/
+
+# Editor & IDE
+vscode-extension/
+.claude/
+
+# CI/CD
+.github/
+
+# TypeScript config
+tsconfig*.json
+jest.config.js
+
+# Lint & format config
+.eslintrc.json
+.prettierrc.json
+
+# Internal docs
+PRD.md
+CLAUDE.md
+PROJECT_SUMMARY.md
+CONTRIBUTING.md
